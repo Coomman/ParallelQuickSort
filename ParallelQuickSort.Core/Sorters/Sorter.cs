@@ -1,6 +1,6 @@
-﻿namespace ParallelQuickSort.Core;
+﻿namespace ParallelQuickSort.Core.Sorters;
 
-public class Sorter
+public static class Sorter
 {
     private const int MaxParallelDepth = 3;
     private const int PartitionThreshold = 10000;
@@ -25,24 +25,6 @@ public class Sorter
         QuickSort(arr, l, lBound - 1);
         QuickSort(arr, rBound + 1, r);
     }
-
-    private static async Task QuickSort(int[] arr, int l, int r, int depth)
-    {
-        if (r <= l)
-            return;
-
-        var (lBound, rBound) = r - l < PartitionThreshold
-            ? Partition(arr, l, r)
-            : await ParallelPartition(arr, l, r);
-
-        var left = depth == MaxParallelDepth
-            ? QuickSort(arr, l, lBound - 1, depth)
-            : Task.Run(() => QuickSort(arr, l, lBound - 1, depth + 1));
-        var right = QuickSort(arr, rBound + 1, r, depth);
-
-        await Task.WhenAll(left, right);
-    }
-    
     private static (int lBound, int rBound) Partition(int[] arr, int l, int r)
     {
         SetPivot(arr, l, r);
@@ -63,7 +45,23 @@ public class Sorter
 
         return (l, r);
     }
+    
+    private static async Task QuickSort(int[] arr, int l, int r, int depth)
+    {
+        if (r <= l)
+            return;
 
+        var (lBound, rBound) = r - l < PartitionThreshold
+            ? Partition(arr, l, r)
+            : await ParallelPartition(arr, l, r);
+
+        var left = depth == MaxParallelDepth
+            ? QuickSort(arr, l, lBound - 1, depth)
+            : Task.Run(() => QuickSort(arr, l, lBound - 1, depth + 1));
+        var right = QuickSort(arr, rBound + 1, r, depth);
+
+        await Task.WhenAll(left, right);
+    }
     private static async Task<(int lBound, int rBound)> ParallelPartition(int[] arr, int l, int r)
     {
         SetPivot(arr, l, r);
@@ -86,10 +84,10 @@ public class Sorter
 
         return (sameStart, sameFinish - 1);
     }
-
+    
     private static void SetPivot(int[] arr, int l, int r)
     {
-        int mid = l + (r - l) / 2;
+        int mid = (l & r) + ((l ^ r) >> 1);
 
         Swap(arr, mid, l + 1);
 
@@ -100,12 +98,7 @@ public class Sorter
         if (arr[l] > arr[l + 1])
             Swap(arr, l, l + 1);
     }
-
-    private static void Swap(int[] arr, int first, int second)
-    {
-        (arr[first], arr[second]) = (arr[second], arr[first]);
-    }
-
+    
     private static int[] Filter(int[] arr, int l, int r, Func<int, bool> pred)
     {
         var list = new List<int>(PartitionThreshold);
@@ -119,5 +112,10 @@ public class Sorter
         }
 
         return list.ToArray();
+    }
+
+    private static void Swap(int[] arr, int first, int second)
+    {
+        (arr[first], arr[second]) = (arr[second], arr[first]);
     }
 }

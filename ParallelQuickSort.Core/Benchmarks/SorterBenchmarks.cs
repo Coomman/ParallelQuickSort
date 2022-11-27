@@ -1,6 +1,7 @@
 ﻿using BenchmarkDotNet.Attributes;
+using ParallelQuickSort.Core.Sorters;
 
-namespace ParallelQuickSort.Core;
+namespace ParallelQuickSort.Core.Benchmarks;
 
 public class SorterBenchmarks
 {
@@ -33,5 +34,11 @@ public class SorterBenchmarks
     public async Task NaiveParallelQuickSort()
     {
         await Sorter.NaiveParallelQuickSort(_needToSort);
+    }
+    
+    [Benchmark]
+    public async Task SampleSort()
+    {
+        await SampleSorter.Sort(_needToSort);
     }
 }
