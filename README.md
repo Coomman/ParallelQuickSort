@@ -15,12 +15,12 @@ Then copies them to the array in parallel.
 
 ## [SampleSort](https://github.com/Coomman/ParallelQuickSort/blob/494ac9a6cbe5582e7277470f9e045b5a2015cc86/ParallelQuickSort.Core/Sorters/SampleSorter.cs#L7)
 The main problem of the Naive parallel version is using a local pivot.  
-This algorithm finds the approximate pivots for the whole array, but uses **O(N)** extra memory:
-1. Split equal parts of the array between **N** processes.
+This algorithm finds the approximate pivots for the whole array, but uses **O(n)** extra memory:
+1. Split equal parts of the array between **P** processes.
 2. Run Sequential QS on all parts in parallel.
 3. In each part get sample elements dividing their parts into equal subparts.
 4. Run Sequential QS on samples and take their samples as pivots.
-5. Partition all the parts in parallel using this pivots to get **N** groups (ex. all elements < n in each part).
+5. Partition all the parts in parallel using this pivots to get **P** groups (ex. all elements < n in each part).
 6. Find starting copy point for each group using ***Scan***.
 7. Merge (similarly to merge-sort) and copy groups in parallel.
 
