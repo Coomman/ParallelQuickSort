@@ -10,7 +10,7 @@ public class Sorter
         QuickSort(arr, 0, arr.Length - 1);
     }
 
-    public static Task ParallelQuickSort(int[] arr)
+    public static Task NaiveParallelQuickSort(int[] arr)
     {
         return QuickSort(arr, 0, arr.Length - 1, 1);
     }

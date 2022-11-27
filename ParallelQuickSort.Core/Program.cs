@@ -1,5 +1,9 @@
 ﻿using System.Diagnostics;
+using BenchmarkDotNet.Running;
 using ParallelQuickSort.Core;
+
+//BenchmarkRunner.Run<SorterBenchmarks>();
+
 
 const double count = 5;
 
@@ -25,7 +29,7 @@ for (int i = 0; i < count; i++)
 
     sw = Stopwatch.StartNew();
 
-    await Sorter.ParallelQuickSort(arr2);
+    await Sorter.NaiveParallelQuickSort(arr2);
 
     par += sw.ElapsedMilliseconds;
     

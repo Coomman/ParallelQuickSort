@@ -9,7 +9,7 @@ public class QuickSortTests
     {
         var arr = new[] { 14, 89, 77, 18, 9, 1 };
         
-        await Sorter.ParallelQuickSort(arr);
+        await Sorter.NaiveParallelQuickSort(arr);
 
         arr.Should().BeInAscendingOrder();
     }
@@ -44,7 +44,7 @@ public class QuickSortTests
             var initial = new int[arr.Length];
             arr.CopyTo(initial, 0);
             
-            await Sorter.ParallelQuickSort(arr);
+            await Sorter.NaiveParallelQuickSort(arr);
 
             arr.Should().BeInAscendingOrder("Initial array sizeof(" + arr.Length + ") is {" + string.Join(", ", initial) + "}");
         }
@@ -57,7 +57,7 @@ public class QuickSortTests
             .Select(_ => Random.Shared.Next())
             .ToArray();
         
-        await Sorter.ParallelQuickSort(arr);
+        await Sorter.NaiveParallelQuickSort(arr);
 
         arr.Should().BeInAscendingOrder();
     }
